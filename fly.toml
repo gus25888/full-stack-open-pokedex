@@ -30,7 +30,7 @@ primary_region = 'scl'
   path = "/health"
 
 [deploy]
-  strategy = "canary"
+  strategy = "immediate"
 
 [[vm]]
   size = 'shared-cpu-1x'
