@@ -5,9 +5,14 @@ on:
     push:
         branches:
             - main
+    pull_request:
+        branches: [main]
+        types: [opened, synchronize]
 jobs:
     deploy:
         name: Deploy app
+        # Optional only deploy if it is a pull request approved
+        if: ${{ github.event_name == 'push' }}
         runs-on: ubuntu-latest
         concurrency: deploy-group # optional: ensure only one action runs at a time
         steps:
