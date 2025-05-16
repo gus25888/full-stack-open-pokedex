@@ -15,6 +15,8 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         runs-on: ubuntu-24.04
         concurrency: deploy-group # optional: ensure only one action runs at a time
+        permissions:
+            contents: write
         steps:
             - uses: actions/checkout@v4
             - uses: superfly/flyctl-actions/setup-flyctl@master
