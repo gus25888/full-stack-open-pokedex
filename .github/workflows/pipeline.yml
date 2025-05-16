@@ -45,6 +45,8 @@ jobs:
         needs: [simple_deployment_pipeline]
         runs-on: ubuntu-24.04
         steps:
+            - run: pwd
+            - run: ls -lah
             - name: Bump version and push tag
               uses: anothrNick/github-tag-action@1.73.0
               env:
