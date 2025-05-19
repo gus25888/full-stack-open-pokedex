@@ -32,6 +32,12 @@ jobs:
               run: echo 'this step is executed'
             - if: ${{ env.NEW_CONDITION == 'false' }}
               run: echo 'this step will not be executed'
+            - name: commit messages joined
+              env:
+                  COMMIT_MESSAGES_STR: ${{ join(toJson(github.event.commits.*.message),',') }}
+              run: echo "$COMMIT_MESSAGES_STR"
+            - name: validate commit messages joined
+              run: echo "${{ contains( env.COMMIT_MESSAGES_STR, '#skip') }}"
 
     condition_test_job:
         runs-on: ubuntu-24.04
