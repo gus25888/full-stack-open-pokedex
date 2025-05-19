@@ -45,13 +45,13 @@ jobs:
             - if: ${{ env.CONDITION == 'false' }}
               run: echo 'NO se cumple para el commit'
     job_true_test:
-        if: ${{ github.env.CONDITION == 'true' }}
+        if: ${{ github.event_name == 'push' && github.env.CONDITION == 'true' }}
         runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             - run: echo "Se ejecutará job_true_test"
     job_false_test:
-        if: ${{ github.env.CONDITION == 'false' }}
+        if: ${{ github.event_name == 'push' && github.env.CONDITION == 'false' }}
         runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
