@@ -5,6 +5,10 @@ on:
         branches:
             - main
 
+env:
+    # the below will be 'true'
+    CONDITION: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }}
+
 jobs:
     a_test_job:
         runs-on: ubuntu-24.04
@@ -22,3 +26,13 @@ jobs:
               env:
                   COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
               run: echo "$COMMIT_MESSAGES"
+
+    condition_test_job:
+        runs-on: ubuntu-24.04
+        steps:
+            - run: echo 'Valor de la condicion = github.env.CONDITION'
+            - run: echo 'Valor de la condicion = $CONDITION'
+            - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'true' }}
+              run: echo 'condicion cumplida para el commit'
+            - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'false' }}
+              run: echo 'NO se cumple para el commit'
