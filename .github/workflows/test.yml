@@ -49,7 +49,8 @@ jobs:
         runs-on: ubuntu-24.04
         steps:
             - run: echo "Se ejecutará job_neutral_test"
-            - run: echo "CONDITION= ${{github.env.CONDITION}}"
+            - run: echo "CONDITION= ${{ github.env.CONDITION }}"
+            - run: echo "CONDITION= ${{ env.CONDITION }}"
     job_true_test:
         if: ${{ github.event_name == 'push' && github.env.CONDITION == 'true' }}
         runs-on: ubuntu-24.04
