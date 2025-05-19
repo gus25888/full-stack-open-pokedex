@@ -8,6 +8,8 @@ on:
 env:
     # the below will be 'true'
     CONDITION: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }}
+    # the below will be 'true'
+    NEW_CONDITION: ${{ contains('kissa', 'ss') && contains('koira', 'ra') && contains('pretty long array of criteria to repeat in multiple places', 'crit') }}
 
 jobs:
     a_test_job:
@@ -26,6 +28,10 @@ jobs:
               env:
                   COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
               run: echo "$COMMIT_MESSAGES"
+            - if: ${{ env.NEW_CONDITION == 'true' }}
+              run: echo 'this step is executed'
+            - if: ${{ env.NEW_CONDITION == 'false' }}
+              run: echo 'this step will not be executed'
 
     condition_test_job:
         runs-on: ubuntu-24.04
