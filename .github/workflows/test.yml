@@ -8,6 +8,7 @@ on:
 env:
     # the below will be 'true'
     CONDITION: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }}
+    SIMPLE_CONDITION: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }}
     # the below will be 'true'
     NEW_CONDITION: ${{ contains('kissa', 'ss') && contains('koira', 'ra') && contains('pretty long array of criteria to repeat in multiple places', 'crit') }}
 
@@ -38,21 +39,11 @@ jobs:
               run: echo "$COMMIT_MESSAGES_STR"
             - name: validate commit messages joined
               run: echo "${{ contains( env.COMMIT_MESSAGES_STR, '#skip') }}"
-            - if: ${{ contains( env.COMMIT_MESSAGES_STR, '#skip') }} == 'true' }}
+            - if: ${{ contains( github.event.commits.*.message, '#skip')  == 'true' }}
               run: echo 'condicion cumplida para el commit'
-            - if: ${{ contains( env.COMMIT_MESSAGES_STR, '#skip') }} == 'false' }}
+            - if: ${{ contains( env.COMMIT_MESSAGES_STR, '#skip') == 'false' }}
               run: echo 'NO se cumple para el commit'
-
-    condition_test_job:
-        runs-on: ubuntu-24.04
-        steps:
-            - run: echo 'Valor de la condicion = github.env.CONDITION'
-            - run: echo 'Valor de la condicion = $CONDITION'
-            - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'true' }}
-              run: echo 'condicion con ENV cumplida para el commit'
-            - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'false' }}
-              run: echo 'NO se cumple condicion con ENV para el commit'
-            - if: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }} == 'true' }}
+            - if: ${{ env.CONDITION == 'true' }}
               run: echo 'condicion cumplida para el commit'
-            - if: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }} == 'false' }}
+            - if: ${{ env.CONDITION == 'false' }}
               run: echo 'NO se cumple para el commit'
