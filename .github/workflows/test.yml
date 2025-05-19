@@ -33,6 +33,10 @@ jobs:
             - run: echo 'Valor de la condicion = github.env.CONDITION'
             - run: echo 'Valor de la condicion = $CONDITION'
             - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'true' }}
-              run: echo 'condicion cumplida para el commit'
+              run: echo 'condicion con ENV cumplida para el commit'
             - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'false' }}
+              run: echo 'NO se cumple condicion con ENV para el commit'
+            - if: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }} == 'true' }}
+              run: echo 'condicion cumplida para el commit'
+            - if: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }} == 'false' }}
               run: echo 'NO se cumple para el commit'
