@@ -44,20 +44,6 @@ jobs:
               run: echo 'condicion cumplida para el commit'
             - if: ${{ env.SKIP_JOB == 'false' }}
               run: echo 'NO se cumple para el commit'
-    job_condition_test_true:
-        if: ${{ github.env.CONDITION == 'true' }}
-        runs-on: ubuntu-24.04
-        steps:
-            - run: echo "Se ejecutará job_condition_test_true"
-            - run: echo "SKIP_JOB= $CONDITION"
-            - run: echo "SKIP_JOB= ${{ env.CONDITION }}"
-    job_condition_test_false:
-        if: ${{ github.env.CONDITION == 'false' }}
-        runs-on: ubuntu-24.04
-        steps:
-            - run: echo "Se ejecutará job_condition_test_false"
-            - run: echo "SKIP_JOB= $CONDITION"
-            - run: echo "SKIP_JOB= ${{ env.CONDITION }}"
     job_neutral_test:
         if: ${{ github.event_name == 'push' }}
         runs-on: ubuntu-24.04
@@ -67,25 +53,13 @@ jobs:
             - run: echo "SKIP_JOB= $SKIP_JOB"
             - run: echo "SKIP_JOB= ${{ env.SKIP_JOB }}"
     job_direct_true_test:
-        if: ${{ contains( join(github.event.commits.*.message), '#skip') == 'true' }}
+        if: ${{!contains( join(github.event.commits.*.message), '#skip')}}
         runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             - run: echo "Se ejecutará job_true_test"
     job_direct_false_test:
         if: ${{ contains( join(github.event.commits.*.message), '#skip') == 'false' }}
-        runs-on: ubuntu-24.04
-        steps:
-            - uses: actions/checkout@v4
-            - run: echo "Se ejecutará job_false_test"
-    job_true_test:
-        if: ${{ github.event_name == 'push' && github.env.SKIP_JOB == 'true' }}
-        runs-on: ubuntu-24.04
-        steps:
-            - uses: actions/checkout@v4
-            - run: echo "Se ejecutará job_true_test"
-    job_false_test:
-        if: ${{ github.event_name == 'push' && github.env.SKIP_JOB == 'false' }}
         runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
