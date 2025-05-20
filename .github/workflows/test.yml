@@ -3,13 +3,11 @@ name: Testing stuff
 on:
     push:
         branches:
-            - main
+            - exercise_11_16
 
 env:
-    # the below will be 'true'
-    CONDITION: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }}
-    # the below will be 'true'
-    NEW_CONDITION: ${{ contains('kissa', 'ss') && contains('koira', 'ra') && contains('pretty long array of criteria to repeat in multiple places', 'crit') }}
+    SKIP_JOB: ${{ contains( join(github.event.commits.*.message), '#skip') }}
+    CONDITION: ${{ contains('kissa', 'ss') && contains('koira', 'ra') && contains('pretty long array of criteria to repeat in multiple places', 'crit') }}
 
 jobs:
     a_test_job:
@@ -28,27 +26,41 @@ jobs:
               env:
                   COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
               run: echo "$COMMIT_MESSAGES"
-            - if: ${{ env.NEW_CONDITION == 'true' }}
-              run: echo 'this step is executed'
-            - if: ${{ env.NEW_CONDITION == 'false' }}
-              run: echo 'this step will not be executed'
             - name: commit messages joined
               env:
-                  COMMIT_MESSAGES_STR: ${{ join(toJson(github.event.commits.*.message),',') }}
+                  COMMIT_MESSAGES_STR: ${{ join(github.event.commits.*.message) }}
               run: echo "$COMMIT_MESSAGES_STR"
             - name: validate commit messages joined
               run: echo "${{ contains( env.COMMIT_MESSAGES_STR, '#skip') }}"
-
-    condition_test_job:
+            - if: ${{ contains( join(github.event.commits.*.message) , '#skip') == 'true' }}
+              run: echo 'DIRECTO | condicion cumplida para el commit'
+            - if: ${{ contains( join(github.event.commits.*.message), '#skip') == 'false' }}
+              run: echo 'DIRECTO | NO se cumple para el commit'
+            - if: ${{ contains( env.COMMIT_MESSAGES_STR, '#skip') == 'true' }}
+              run: echo 'CON VARIABLE | condicion cumplida para el commit'
+            - if: ${{ contains( env.COMMIT_MESSAGES_STR, '#skip') == 'false' }}
+              run: echo 'CON VARIABLE | NO se cumple para el commit'
+            - if: ${{ env.SKIP_JOB == 'true' }}
+              run: echo 'condicion cumplida para el commit'
+            - if: ${{ env.SKIP_JOB == 'false' }}
+              run: echo 'NO se cumple para el commit'
+    job_neutral_test:
+        if: ${{ github.event_name == 'push' }}
         runs-on: ubuntu-24.04
         steps:
-            - run: echo 'Valor de la condicion = github.env.CONDITION'
-            - run: echo 'Valor de la condicion = $CONDITION'
-            - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'true' }}
-              run: echo 'condicion con ENV cumplida para el commit'
-            - if: ${{ contains( join(github.env.COMMIT_MESSAGES,','), '#skip') }} == 'false' }}
-              run: echo 'NO se cumple condicion con ENV para el commit'
-            - if: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }} == 'true' }}
-              run: echo 'condicion cumplida para el commit'
-            - if: ${{ contains( join(toJson(github.event.commits.*.message),','), '#skip') }} == 'false' }}
-              run: echo 'NO se cumple para el commit'
+            - run: echo "Se ejecutará job_neutral_test"
+            - run: echo "SKIP_JOB= ${{ github.env.SKIP_JOB }}"
+            - run: echo "SKIP_JOB= $SKIP_JOB"
+            - run: echo "SKIP_JOB= ${{ env.SKIP_JOB }}"
+    job_direct_true_test:
+        if: ${{!contains( join(github.event.commits.*.message), '#skip')}}
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+            - run: echo "Se ejecutará job_true_test"
+    job_direct_false_test:
+        if: ${{contains( join(github.event.commits.*.message), '#skip')}}
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+            - run: echo "Se ejecutará job_false_test"
