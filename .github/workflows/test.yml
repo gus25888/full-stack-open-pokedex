@@ -7,7 +7,7 @@ on:
 
 env:
     # the below will be 'true'
-    CONDITION: ${{ contains( join(github.event.commits.*.message), '#skip') }}
+    SKIP_JOB: ${{ contains( join(github.event.commits.*.message), '#skip') }}
 
 jobs:
     a_test_job:
@@ -40,24 +40,39 @@ jobs:
               run: echo 'CON VARIABLE | condicion cumplida para el commit'
             - if: ${{ contains( env.COMMIT_MESSAGES_STR, '#skip') == 'false' }}
               run: echo 'CON VARIABLE | NO se cumple para el commit'
-            - if: ${{ env.CONDITION == 'true' }}
+            - if: ${{ env.SKIP_JOB == 'true' }}
               run: echo 'condicion cumplida para el commit'
-            - if: ${{ env.CONDITION == 'false' }}
+            - if: ${{ env.SKIP_JOB == 'false' }}
               run: echo 'NO se cumple para el commit'
     job_neutral_test:
         if: ${{ github.event_name == 'push' }}
         runs-on: ubuntu-24.04
         steps:
             - run: echo "Se ejecutará job_neutral_test"
-            - run: echo "CONDITION= ${{ github.env.CONDITION }}"
-            - run: echo "CONDITION= ${{ env.CONDITION }}"
-    job_true_test:
-        if: ${{ github.event_name == 'push' && github.env.CONDITION == 'true' }}
+            - run: echo "SKIP_JOB= ${{ github.env.SKIP_JOB }}"
+            - run: echo "SKIP_JOB= $SKIP_JOB"
+            - run: echo "SKIP_JOB= ${{ env.SKIP_JOB }}"
+    job_direct_true_test:
+        if: ${{ github.event_name == 'push' && contains( join(github.event.commits.*.message), '#skip') == 'true' }}
         runs-on: ubuntu-24.04
         steps:
+            - uses: actions/checkout@v4
+            - run: echo "Se ejecutará job_true_test"
+    job_direct_false_test:
+        if: ${{ github.event_name == 'push' && contains( join(github.event.commits.*.message), '#skip') == 'false' }}
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+            - run: echo "Se ejecutará job_false_test"
+    job_true_test:
+        if: ${{ github.event_name == 'push' && github.env.SKIP_JOB == 'true' }}
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
             - run: echo "Se ejecutará job_true_test"
     job_false_test:
-        if: ${{ github.event_name == 'push' && github.env.CONDITION == 'false' }}
+        if: ${{ github.event_name == 'push' && github.env.SKIP_JOB == 'false' }}
         runs-on: ubuntu-24.04
         steps:
+            - uses: actions/checkout@v4
             - run: echo "Se ejecutará job_false_test"
