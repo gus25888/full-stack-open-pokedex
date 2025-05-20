@@ -59,7 +59,7 @@ jobs:
             - uses: actions/checkout@v4
             - run: echo "Se ejecutará job_true_test"
     job_direct_false_test:
-        if: ${{ contains( join(github.event.commits.*.message), '#skip') == 'false' }}
+        if: ${{contains( join(github.event.commits.*.message), '#skip')}}
         runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
