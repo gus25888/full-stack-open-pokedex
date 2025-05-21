@@ -6,7 +6,12 @@ on:
             - exercise_11_18
 
 jobs:
+    main_job:
+        runs-on: ubuntu-24.04
+        steps:
+            - run: "echo 'Hello World!'"
     notify_job:
+        needs: [main_job]
         runs-on: ubuntu-24.04
         steps:
             - name: Test success message
