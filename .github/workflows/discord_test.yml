@@ -9,25 +9,40 @@ jobs:
     notify_job:
         runs-on: ubuntu-24.04
         steps:
+            - name: Trigger failure
+              run: |
+                  echo "This step is designed to fail"
+                  exit 1
             - name: Test success message
               uses: sarisia/actions-status-discord@v1
-              if: always()
+              if: success()
               with:
                   webhook: ${{ secrets.DISCORD_WEBHOOK }}
                   status: ${{job.status}}
-                  title: "Deploy"
+                  title: "deploy"
                   description: "New Release completed successfully"
                   color: 0x03fc1c
                   url: "https://github.com/gus25888/full-stack-open-pokedex/"
                   username: GitHub Action Result for ${{github.repository}}
             - name: Test error message
               uses: sarisia/actions-status-discord@v1
-              if: always()
+              if: failure()
               with:
                   webhook: ${{ secrets.DISCORD_WEBHOOK }}
                   status: ${{job.status}}
-                  title: "Deploy"
+                  title: "deploy"
                   description: "New Release failed"
+                  color: 0xfc0303
+                  url: "https://github.com/gus25888/full-stack-open-pokedex/"
+                  username: GitHub Action Result for ${{github.repository}}
+            - name: Cancel Notification - Discord
+              uses: sarisia/actions-status-discord@v1
+              if: cancelled()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK }}
+                  status: ${{job.status}}
+                  title: "deploy"
+                  description: "New Release cancelled"
                   color: 0xfc0303
                   url: "https://github.com/gus25888/full-stack-open-pokedex/"
                   username: GitHub Action Result for ${{github.repository}}
