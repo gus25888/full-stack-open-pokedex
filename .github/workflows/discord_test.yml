@@ -9,24 +9,13 @@ jobs:
     notify_job:
         runs-on: ubuntu-24.04
         steps:
-            - name: Test Success
-              uses: rjstone/discord-webhook-notify@v1.0.4
-              if: success()
+            - name: Test message
+              uses: sarisia/actions-status-discord@v1
+              if: always()
               with:
-                  severity: info
-                  details: Test Succeeded!
-                  webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-            - name: Test Failure
-              uses: rjstone/discord-webhook-notify@v1.0.4
-              if: failure()
-              with:
-                  severity: error
-                  details: Test Failed!
-                  webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-            - name: Test Cancelled
-              uses: rjstone/discord-webhook-notify@v1.0.4
-              if: cancelled()
-              with:
-                  severity: warn
-                  details: Test Cancelled!
-                  webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+                  webhook: ${{ secrets.DISCORD_WEBHOOK }}
+                  nodetail: true
+                  title: "Test Message"
+                  description: |
+                      Test message emitted for Gus25888
+                  color: 0xff91a4
