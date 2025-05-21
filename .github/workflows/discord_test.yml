@@ -14,8 +14,10 @@ jobs:
               if: always()
               with:
                   webhook: ${{ secrets.DISCORD_WEBHOOK }}
+                  status: ${{job.status}}
                   nodetail: true
-                  title: "Test Message"
-                  description: |
-                      Test message emitted for Gus25888
-                  color: 0xff91a4
+                  title: "Deploy"
+                  description: "New Release completed successfully"
+                  color: 0x03fc1c
+                  url: "https://github.com/gus25888/full-stack-open-pokedex/"
+                  username: GitHub Action Result for ${{github.repository}}
