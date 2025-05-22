@@ -22,6 +22,7 @@ jobs:
                   status: ${{job.status}}
                   title: "deploy"
                   description: "New Release completed successfully"
+                  nocontext: true
                   color: 0x03fc1c
                   url: "https://github.com/gus25888/full-stack-open-pokedex/"
                   username: GitHub Action Result for ${{github.repository}}
