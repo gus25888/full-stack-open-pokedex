@@ -52,3 +52,30 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAG_PREFIX: v
                   DEFAULT_BUMP: patch
+    discord_notification:
+        runs-on: ubuntu-24.04
+        needs: [simple_deployment_pipeline, tag_release]
+        steps:
+            - name: Success Notification - Discord
+              uses: sarisia/actions-status-discord@v1
+              if: success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK }}
+                  status: ${{job.status}}
+                  title: "deploy"
+                  description: "New Version `${{github.event.release.tag_name}}` released to https://full-stack-open-pokedex-lively-sound-9394.fly.dev/"
+                  nocontext: true
+                  color: 0x03fc1c
+                  url: "https://github.com/gus25888/full-stack-open-pokedex/"
+                  username: GitHub Action Result for ${{github.repository}}
+            - name: Error Notification - Discord
+              uses: sarisia/actions-status-discord@v1
+              if: failure()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK }}
+                  status: ${{job.status}}
+                  title: "deploy"
+                  description: "New Release failed"
+                  color: 0xfc0303
+                  url: "https://github.com/gus25888/full-stack-open-pokedex/"
+                  username: GitHub Action Result for ${{github.repository}}
