@@ -4,6 +4,8 @@ on:
     push:
         branches:
             - exercise_11_19
+    schedule:
+        - cron: "55 21 * * 1-5"
 
 jobs:
     ping:
