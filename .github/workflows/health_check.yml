@@ -5,7 +5,7 @@ on:
         branches:
             - exercise_11_19
     schedule:
-        - cron: "15 2 * * 1-5"
+        - cron: "*/10 * * * 1-5"
 
 jobs:
     ping:
@@ -18,3 +18,4 @@ jobs:
                   url: https://full-stack-open-pokedex-lively-sound-9394.fly.dev/
                   max-attempts: 3
                   retry-delay: 5s
+            - run: echo "Test access to https://full-stack-open-pokedex-lively-sound-9394.fly.dev/ at $(date)"
