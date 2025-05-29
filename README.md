@@ -13,3 +13,7 @@ Start by running `npm install` inside the project folder
 `npm run eslint` to run eslint
 `npm run build` to make a production build
 `npm run start-prod` to run your production build
+
+## Linked Repository - Exercises 11.20 and 11.21
+
+To access the repository used to exercises 11.20 and 11.21, use [this](https://github.com/gus25888/phonebook-cicd)

@@ -63,7 +63,7 @@ jobs:
                   webhook: ${{ secrets.DISCORD_WEBHOOK }}
                   status: ${{job.status}}
                   title: "deploy"
-                  description: "New Version `${{github.event.release.tag_name}}` released to https://full-stack-open-pokedex-lively-sound-9394.fly.dev/"
+                  description: "New Version released to https://full-stack-open-pokedex-lively-sound-9394.fly.dev/"
                   nocontext: true
                   color: 0x03fc1c
                   url: "https://github.com/gus25888/full-stack-open-pokedex/"
