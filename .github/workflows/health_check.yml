@@ -3,9 +3,9 @@ name: Health Check
 on:
     push:
         branches:
-            - exercise_11_19
-    schedule:
-        - cron: "*/10 * * * 1-5"
+            - main
+    # schedule:
+    #     - cron: "8 8 * * 1-5"
 
 jobs:
     ping:
